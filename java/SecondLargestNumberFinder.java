@@ -1,27 +1,18 @@
 class MaxSecond {
     public static void main(String[] args) {
-        int[] arry = {-2,-3,-1,-4,-5,8};
-        int maxNumber = 0;
-        int secondNumber = 0;
-
-        for(int i = 0; i < arry.length; i++){
-            if(i == 0){
-                maxNumber = arry[i];
-                continue;
-            }
-
-            else if(i == 1){
-                if(maxNumber >= arry[i] ){
-                    secondNumber = arry[i];
-                }
-                else{
-                    secondNumber = maxNumber;
-                    maxNumber = arry[i];
-                }
-                continue;
-            }
+        int[] arry = {-2,-3,-1,-4,-5,8,0};
+        int maxNumber = arry[0];
+        int secondNumber = arry[1];
+        
+        //for문에 들어있을 필요가 없음
+        if( maxNumber < secondNumber)
+        {
+            maxNumber = arry[1];
+            secondNumber = arry[0];
+        }
             
-						//현재가 max값보다 클 때 첫번째,두번째 수 변경
+        for(int i = 2; i < arry.length; i++){
+            //현재가 max값보다 클 때 첫번째,두번째 수 변경
             if( maxNumber <= arry[i] ){
                 secondNumber = maxNumber;
                 maxNumber = arry[i];
