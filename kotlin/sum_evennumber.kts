@@ -1,3 +1,5 @@
+
+//use "if"
 fun main() {
     var sum_value = 0
     for (i in 1..100) {
@@ -9,6 +11,7 @@ fun main() {
     println(sum_value)
 }
 
+//use "when"
 fun main() {
     var sum_value = 0
     for (i in 1..100){
