@@ -1,0 +1,38 @@
+class Car(
+    val model: String,
+    var speed: Int,
+    var gas: Int
+) {
+    fun getSpeed(speed: Int): Int {
+        return speed
+    }
+
+    fun increaseSpeed(increasValue: Int = 5): Int {
+        speed += increasValue
+        gas -= 10
+        return speed
+    }
+
+    private var newGas: Int = 0
+    fun addGas() {
+        newGas = when {
+            gas < 20 -> 100 - gas
+            else -> 0
+        }
+        gas += newGas
+    }
+
+    fun printInfo() {
+        println("model: $model")
+        println("speed: $speed")
+        println("gas: $gas")
+    }
+}
+
+val driveCar = Car(model = "avante", 0, 30)
+
+for (i in 1..5) {
+    driveCar.printInfo()
+    driveCar.increaseSpeed()
+    driveCar.addGas() // 연료 리필
+}
