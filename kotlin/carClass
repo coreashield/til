@@ -13,13 +13,10 @@ class Car(
         return speed
     }
 
-    private var newGas: Int = 0
     fun addGas() {
-        newGas = when {
-            gas < 20 -> 100 - gas
-            else -> 0
+        if (gas < 20){
+            gas += 100 - gas
         }
-        gas += newGas
     }
 
     fun printInfo() {
@@ -29,7 +26,7 @@ class Car(
     }
 }
 
-val driveCar = Car(model = "avante", 0, 30)
+val driveCar = Car(model = "avante", speed = 0, gas = 30)
 
 for (i in 1..5) {
     driveCar.printInfo()
