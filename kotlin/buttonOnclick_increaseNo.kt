@@ -22,9 +22,8 @@ class StateActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             var count by remember { mutableIntStateOf(0) }
-            val stateshow
-            by remember { mutableStateOf( true) }
-            // var clickEnabled by remember { mutableStateOf(false) }
+            var stateshow by remember { mutableStateOf(true) }
+            var clickEnabled by remember { mutableStateOf(false) }
             Column {
                 Row {
                     Button(
@@ -53,26 +52,20 @@ class StateActivity : ComponentActivity() {
 
                     Button(
                         onClick = {
-
-                        }) {
-                        if(stateshow){
-                            Text(text = "결과 숨김")
-                        }else{
-                            Text(text = "결과 보임")
-                        }
-
+                            stateshow = !stateshow
+                        })
+                    {
+                        Text(text = if (stateshow) "결과 숨김" else "결과 보임")
                     }
                 }
-                if(stateshow){
+                if (stateshow) {
                     for (i in 1..count) {
                         Text(text = "$i: 저장했어요.")
                     }
-                }else{
+                } else {
                     Text(text = "")
                 }
             }
         }
     }
 }
-
-//hide button 수정 중
