@@ -1,0 +1,158 @@
+package com.example.btncount
+
+import android.app.Activity
+import android.content.Context
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.core.content.edit
+import com.example.btncount.ui.theme.BtnCountTheme
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            BtnCountTheme {
+                MainScreen()
+            }
+        }
+    }
+}
+
+@Composable
+fun MainScreen() {
+    val activity = LocalContext.current as? Activity
+    val sharedPref = remember {
+        activity?.getPreferences(Context.MODE_PRIVATE)
+    }
+
+    var clickcount by remember {
+        val saveCount = sharedPref?.getInt("lastCount", 0)
+        mutableStateOf(saveCount ?: 0)
+    }
+
+    var nowTime by remember {
+        mutableStateOf(sharedPref?.getString("lastTime", "") ?: "")
+    }
+    nowTime = saveTime()
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+
+        CustomButton(
+            text = "증가",
+            onClick = {
+                clickcount = if (clickcount == Int.MAX_VALUE) clickcount else clickcount + 1
+                sharedPref?.edit { putInt("lastCount", clickcount); putString("lastTime",nowTime); }
+            },
+            enabled = clickcount < Int.MAX_VALUE && clickcount > Int.MIN_VALUE
+        )
+
+        CustomButton(
+            text = "2배 증가",
+            onClick = {
+                clickcount = if (clickcount.toLong() * 2 > Int.MAX_VALUE || clickcount.toLong() * 2 < Int.MIN_VALUE) {
+                    clickcount
+                } else {
+                    clickcount * 2
+                }
+                sharedPref?.edit { putInt("lastCount", clickcount); putString("lastTime",nowTime); }
+            },
+            enabled = clickcount < Int.MAX_VALUE && clickcount > Int.MIN_VALUE
+        )
+
+        CustomButton(
+            text = "감소",
+            onClick = {
+                clickcount = if (clickcount == Int.MIN_VALUE) clickcount else clickcount - 1
+                sharedPref?.edit { putInt("lastCount", clickcount); putString("lastTime",nowTime); }
+            },
+            enabled = clickcount > 0
+        )
+
+        CustomButton(
+            text = "반으로 나누기",
+            onClick = {
+                clickcount /= 2
+                sharedPref?.edit { putInt("lastCount", clickcount); putString("lastTime",nowTime); }
+            },
+            enabled = clickcount > 1 && clickcount % 2 == 0
+        )
+
+        CustomButton(
+            text = "함수 초기화",
+            onClick = {
+                clickcount = 0
+                sharedPref?.edit { putInt("lastCount", clickcount); putString("lastTime",nowTime); }
+            },
+            enabled = true
+        )
+
+        Button(onClick = {
+            nowTime = saveTime()
+            sharedPref?.edit { putString("lastTime", nowTime) }
+        }) {
+            Text(text = "터치 시간 저장")
+        }
+
+        Text(text = "클릭카운트 : $clickcount")
+        Text(text = "마지막 클릭 시간 : $nowTime")
+    }
+}
+fun saveTime() : String{
+    val nowTime:String
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    val koreaTimeZone = ZoneId.of("Asia/Seoul")
+    val checkTime = LocalDateTime.now(koreaTimeZone)
+    nowTime = checkTime.format(formatter)
+
+    return nowTime
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    BtnCountTheme {
+        MainScreen()
+    }
+}
+
+//버튼 함수화 필수 x
+@Composable
+fun CustomButton(
+    text: String,
+    onClick: () -> Unit,
+    enabled: Boolean = true
+) {
+    Button(
+        onClick = onClick,
+        enabled = enabled
+    ) {
+        Text(text = text)
+    }
+}
