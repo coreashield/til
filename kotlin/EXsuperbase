@@ -1,0 +1,66 @@
+    data class MateInfo(
+        val type: String,
+        val name: String,
+        val year: String,
+        val month: String,
+        val day: String,
+        val user: String,
+    )
+
+    val insertInfo = MateInfo(
+        user = "jang",
+        type = petTypeState.value,
+        name = nameState.value,
+        year = yearState.value,
+        month = monthState.value,
+        day = dayState.value
+    )
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Button(onClick = {
+            if (petTypeState.value.isEmpty() || nameState.value.isEmpty() ||
+                yearState.value.isEmpty() || monthState.value.isEmpty() || dayState.value.isEmpty()
+            ) {
+                Toast.makeText(context, "정보를 전부 입력해주세요.", Toast.LENGTH_SHORT).show()
+            } else {
+//            신규등록
+                CoroutineScope(Dispatchers.IO).launch {
+                    supabase.from("mateinfo").insert(insertInfo)
+                }
+                Toast.makeText(context, nameState.value + " 정보가 저장되었어요!", Toast.LENGTH_SHORT).show()
+            }
+
+        }) {
+            Text(text = "등록")
+        }
+
+        Button(onClick = {
+            CoroutineScope(Dispatchers.IO).launch {
+                supabase.from("mateinfo").delete {
+                    filter {
+                        eq("user", petTypeState.value)
+                    }
+                }
+            }
+            // 화면 초기화
+            petTypeState.value = ""
+            nameState.value = ""
+            yearState.value = ""
+            monthState.value = ""
+            dayState.value = ""
+            setImageUri(null)
+
+            Toast.makeText(context, nameState.value + " 정보가 삭제되었어요ㅜㅜ 안녕", Toast.LENGTH_SHORT).show()
+        }) {
+            Text(text = "삭제")
+        }
+
+        Button(onClick = { /*TODO*/ }) {
+            Text(text = "이미지 업로드")
+        }
+    }
