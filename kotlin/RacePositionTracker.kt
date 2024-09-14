@@ -10,24 +10,36 @@
 // players 배열에 중복된 이름은 없으며, 1등인 선수의 이름은 callings 배열에 포함되지 않음.
 
 class Solution {
-    fun solution(players: Array<String>, callings: Array<String>): Array<String>{
-        // MutableList로 변경하여 값을 수정 가능하게 함
+    fun solution(players: Array<String>, callings: Array<String>): Array<String> {
+        // MutableList로 플레이어 목록을 유지
         val playerList = players.toMutableList()
         
+        // 선수 이름과 인덱스를 매핑하는 해시맵 생성
+        val playerIndexMap = mutableMapOf<String, Int>()
+        for (i in players.indices) {
+            playerIndexMap[players[i]] = i
+        }
+
         // callings 배열을 순회
         for (i in callings) {
-            // 해당 플레이어의 인덱스를 찾음
-            val index = playerList.indexOf(i)
+            // 현재 선수의 인덱스를 맵에서 가져옴
+            val index = playerIndexMap[i] ?: continue
             
             // 만약 인덱스가 첫 번째가 아니면 위치를 교환
             if (index > 0) {
-                val temp = playerList[index - 1]
-                playerList[index - 1] = playerList[index]
-                playerList[index] = temp
+                // 앞의 선수와 현재 선수의 위치를 교환
+                val previousPlayer = playerList[index - 1]
+                playerList[index - 1] = i
+                playerList[index] = previousPlayer
+                
+                // 맵에서 인덱스 업데이트
+                playerIndexMap[i] = index - 1
+                playerIndexMap[previousPlayer] = index
             }
         }
-        
+
         // 최종 배열 반환
         return playerList.toTypedArray()
     }
 }
+
