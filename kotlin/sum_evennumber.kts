@@ -1,24 +1,21 @@
-
-//use "if"
+// use "if"
 fun main() {
-    var sum_value = 0
+    var sumValue = 0
     for (i in 1..100) {
-        if(i % 2 == 0){
-            //println(i) //짝수 출력
-            sum_value += i //짝수 합계
+        if (i % 2 == 0) {
+            sumValue += i
         }
     }
-    println(sum_value)
+    println(sumValue)
 }
 
-//use "when"
+// use "when"
 fun main() {
-    var sum_value = 0
-    for (i in 1..100){
+    var sumValue = 0
+    for (i in 1..100) {
         when {
-            i % 2 == 0 -> sum_value += i
-            else -> continue
+            i % 2 == 0 -> sumValue += i
         }
     }
-    println(sum_value)
+    println(sumValue)
 }
