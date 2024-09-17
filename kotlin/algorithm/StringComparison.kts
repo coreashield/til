@@ -7,25 +7,18 @@
  * @return p보다 작거나 같은 부분 문자열의 개수
  */
 
-fun solution(t: String, p: String): Int {
-    var answer: Int = 0
-    val lengthCnt: Int = p.length
-    val intValue: Int = p.toInt()
-    
-    // 문자열 t의 모든 길이 lengthCnt 부분 문자열을 비교
-    for (startNo in 0..(t.length - lengthCnt)) {
-        val comparedNo: String = t.substring(startNo, startNo + lengthCnt)
-        if (comparedNo.toInt() <= intValue) {
-            answer += 1
+class Solution {
+    fun solution(t: String, p: String): Int {
+        var answer = 0
+        val lengthCnt = p.length
+        
+        for (startNo in 0..t.length - lengthCnt) {
+            val comparedNo = t.substring(startNo, startNo + lengthCnt)
+            if (comparedNo <= p) {
+                answer += 1
+            }
         }
+        
+        return answer
     }
-    
-    return answer
-}
-
-// 예제 테스트
-fun main() {
-    val t = "3141592"
-    val p = "271"
-    println("Result: ${solution(t, p)}")  // Expected output: 2
 }
